@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-orders
+      author: minh
+      changes:
+        - insert:
+            tableName: orders
+            columns:
+              - column: { name: id, value: 1 }
+              - column: { name: user_id, value: 1 }
+              - column: { name: order_date, value: 2024-03-01T10:00:00 }
+              - column: { name: status, value: COMPLETED }
+              - column: { name: total_amount, value: 77000 }
+
+        - insert:
+            tableName: orders
+            columns:
+              - column: { name: id, value: 2 }
+              - column: { name: user_id, value: 2 }
+              - column: { name: order_date, value: 2024-03-05T14:30:00 }
+              - column: { name: status, value: PENDING }
+              - column: { name: total_amount, value: 57000 }

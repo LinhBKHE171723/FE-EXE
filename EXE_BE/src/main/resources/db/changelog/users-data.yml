@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-users
+      author: minh
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: id, value: 1 }
+              - column: { name: password, value: password1 }
+              - column: { name: full_name, value: Nguyễn Văn A }
+              - column: { name: email, value: a@example.com }
+              - column: { name: phone, value: "0901234567" }
+              - column: { name: avatar_url, value: null }
+              - column: { name: role, value: CUSTOMER }
+              - column: { name: auth_provider, value: LOCAL }
+              - column: { name: created_at, value: 2024-01-01T08:00:00 }
+
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: id, value: 2 }
+              - column: { name: password, value: password2 }
+              - column: { name: full_name, value: Trần Thị B }
+              - column: { name: email, value: b@example.com }
+              - column: { name: phone, value: "0912345678" }
+              - column: { name: avatar_url, value: null }
+              - column: { name: role, value: CUSTOMER }
+              - column: { name: auth_provider, value: GOOGLE }
+              - column: { name: created_at, value: 2024-02-10T09:30:00 }

@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: update-products-enum
+      author: minh
+      changes:
+        - update:
+            tableName: products
+            columns:
+              - column:
+                  name: rice_type
+                  value: "ST"
+            where: id = 1
+
+        - update:
+            tableName: products
+            columns:
+              - column:
+                  name: rice_type
+                  value: "NANG_HUONG"
+            where: id = 2
