@@ -41,7 +41,7 @@ jobs:
           docker build \
             --build-arg FRONTEND_ENV_CONTENT="${{ secrets.FRONTEND_ENV_CONTENT }}" \
             -t khanhlinh1605/superrice_frontend:latest \
-            .
+            ./EXE_FE
           docker push khanhlinh1605/superrice_frontend:latest
 
       - name: SSH into VPS and Deploy
