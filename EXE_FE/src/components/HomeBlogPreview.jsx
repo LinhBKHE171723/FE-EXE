@@ -7,7 +7,7 @@ export default function HomeBlogPreview() {
   return (
     <section className="section-content" id="home-blog">
       <h2 className="section-title" style={{ textAlign: "center" }}>
-        Câu chuyện mới mới
+        Câu chuyện mới
       </h2>
       <div
         className="products-grid"
