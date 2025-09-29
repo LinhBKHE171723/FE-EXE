@@ -3,14 +3,11 @@ version: "3.8"
 services:
   # Frontend service
   frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        FRONTEND_ENV_CONTENT: ${FRONTEND_ENV_CONTENT}
-    image: ${IMAGE_REGISTRY:-localhost}/frontend:${IMAGE_TAG:-latest}
+    image: khanhlinh1605/superrice_frontend:latest
     container_name: frontend-app
-    restart: unless-stopped
+    restart: always
+    ports:
+      - "5173:5173"
     networks:
       - app-network
 
