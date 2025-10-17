@@ -8,30 +8,34 @@ export function CartProvider({ children }) {
     return raw ? JSON.parse(raw) : [];
   });
 
+  // 🔄 Lưu lại giỏ hàng khi thay đổi
   useEffect(() => {
     localStorage.setItem("gaosach:cart", JSON.stringify(items));
   }, [items]);
 
+  // 🛒 Thêm sản phẩm mới
   const add = (product) =>
     setItems((prev) => {
-      // ✅ Dùng _id để so sánh (chuẩn MongoDB)
       const existingProduct = prev.find((item) => item._id === product._id);
-
       if (existingProduct) {
-        // Nếu sản phẩm đã có → tăng số lượng
+        // Nếu đã có sản phẩm → giữ nguyên weight, chỉ tăng quantity
         return prev.map((item) =>
           item._id === product._id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
-
-      // Nếu chưa có → thêm mới
-      return [...prev, { ...product, quantity: 1 }];
+      // Nếu chưa có → mặc định weight = 2kg
+      return [...prev, { ...product, quantity: 1, weight: 2 }];
     });
 
-  const removeItem = (productToRemove) => {
-    setItems((prev) => prev.filter((item) => item._id !== productToRemove._id));
+  // 🧮 Cập nhật số lượng hoặc khối lượng
+  const updateItem = (updatedItem) => {
+    setItems((prev) =>
+      prev.map((item) =>
+        item._id === updatedItem._id ? { ...item, ...updatedItem } : item
+      )
+    );
   };
 
   const updateItemQuantity = (productToUpdate, newQuantity) => {
@@ -46,11 +50,24 @@ export function CartProvider({ children }) {
     }
   };
 
+  // ❌ Xóa sản phẩm
+  const removeItem = (productToRemove) => {
+    setItems((prev) => prev.filter((item) => item._id !== productToRemove._id));
+  };
+
+  // 🧹 Xóa toàn bộ giỏ hàng
   const clear = () => setItems([]);
 
   return (
     <CartContext.Provider
-      value={{ items, add, clear, updateItemQuantity, removeItem }}
+      value={{
+        items,
+        add,
+        clear,
+        updateItem,
+        updateItemQuantity,
+        removeItem,
+      }}
     >
       {children}
     </CartContext.Provider>

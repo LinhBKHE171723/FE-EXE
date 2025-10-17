@@ -2,13 +2,13 @@ import { useState } from "react";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { createOrder } from "../api/orders";
-import { User, Phone, MapPin, CreditCard } from "lucide-react";
-import "./../styles.css"; // import CSS chung
+import { User, Phone, MapPin, CreditCard, Package } from "lucide-react";
+import "./../styles.css";
 
 export default function Checkout({ onComplete }) {
   const { items, clear: clearCart } = useCart();
-
   const { user } = useAuth();
+
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -17,8 +17,9 @@ export default function Checkout({ onComplete }) {
   });
   const [loading, setLoading] = useState(false);
 
+  // ✅ Tổng tiền có tính theo khối lượng
   const total = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) => sum + item.price * (item.weight || 2) * item.quantity,
     0
   );
 
@@ -34,7 +35,6 @@ export default function Checkout({ onComplete }) {
       return;
     }
 
-    // Nếu chưa đăng nhập thì không cho đặt hàng
     if (!user?._id) {
       alert("⚠️ Vui lòng đăng nhập trước khi đặt hàng!");
       return;
@@ -43,7 +43,7 @@ export default function Checkout({ onComplete }) {
     setLoading(true);
 
     try {
-      // 🧾 Chuẩn bị dữ liệu đơn hàng
+      // 🧾 Dữ liệu đơn hàng đầy đủ
       const orderData = {
         userId: user._id,
         name: form.name,
@@ -55,28 +55,26 @@ export default function Checkout({ onComplete }) {
         products: items.map((i) => ({
           productId: i._id,
           quantity: i.quantity,
-          price: i.price,
+          weight: i.weight || 2, // ✅ thêm khối lượng
+          price: i.price * (i.weight || 2), // ✅ giá thực tế theo khối lượng
         })),
       };
+
       console.log("📤 Gửi orderData:", orderData);
 
-      // 🛒 Gửi request tạo đơn hàng
       const newOrder = await createOrder(orderData);
       console.log("✅ Đơn hàng đã tạo:", newOrder);
 
-      // ✅ Xoá giỏ hàng sau khi tạo
       clearCart();
 
-      // Nếu thanh toán COD => hoàn tất
       if (form.payment === "cod") {
         alert("🎉 Đặt hàng thành công! Cảm ơn bạn đã mua sắm.");
-        onComplete("cod");
+        onComplete?.("cod");
       } else {
-        // Nếu là chuyển khoản, mở trang QR
-        onComplete("bank");
+        onComplete?.("bank");
       }
     } catch (err) {
-      console.error("Lỗi khi tạo đơn hàng:", err);
+      console.error("❌ Lỗi khi tạo đơn hàng:", err);
       alert("❌ Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại sau.");
     } finally {
       setLoading(false);
@@ -86,6 +84,37 @@ export default function Checkout({ onComplete }) {
   return (
     <div className="checkout-container">
       <h2>📝 Thông tin thanh toán</h2>
+
+      {/* Danh sách sản phẩm trong đơn hàng */}
+      {items.length > 0 && (
+        <div className="checkout-products">
+          <h3>📦 Sản phẩm trong giỏ hàng</h3>
+          <ul>
+            {items.map((item) => (
+              <li key={item._id} className="checkout-product-item">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="checkout-product-img"
+                />
+                <div className="checkout-product-info">
+                  <h4>{item.name}</h4>
+                  <p>
+                    <Package size={16} /> {item.weight || 2} kg ×{" "}
+                    {item.quantity}
+                  </p>
+                  <p>
+                    Giá:{" "}
+                    <strong>
+                      {(item.price * (item.weight || 2)).toLocaleString()} VND
+                    </strong>
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="checkout-form">
         {/* Họ và tên */}

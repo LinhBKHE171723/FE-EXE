@@ -94,94 +94,130 @@ const OrderTab = () => {
               <TableCell>Sản phẩm</TableCell>
               <TableCell>Phương thức</TableCell>
               <TableCell>Trạng thái</TableCell>
+              <TableCell>Tổng khối lượng</TableCell>
               <TableCell>Tổng tiền</TableCell>
               <TableCell>Ngày đặt</TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
-            {orders.map((o) => (
-              <motion.tr
-                key={o._id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-                style={{
-                  backgroundColor: "#fff",
-                  borderBottom: "1px solid #eee",
-                }}
-              >
-                <TableCell>
-                  <Typography variant="subtitle2">{o.user?.name}</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {o.user?.email}
-                  </Typography>
-                </TableCell>
+            {orders.map((o) => {
+              const totalWeight = o.products?.reduce(
+                (sum, p) => sum + (p.weight || 2) * p.quantity,
+                0
+              );
 
-                <TableCell>
-                  {o.products.map((p) => (
-                    <Box
-                      key={p.id}
-                      display="flex"
-                      alignItems="center"
-                      gap={1}
-                      mb={0.5}
-                    >
-                      {p.image && (
-                        <Avatar
-                          src={p.image}
-                          alt={p.name}
-                          sx={{ width: 28, height: 28 }}
-                        />
-                      )}
-                      <Typography variant="body2">
-                        {p.name} × {p.quantity}
-                      </Typography>
-                    </Box>
-                  ))}
-                </TableCell>
+              return (
+                <motion.tr
+                  key={o._id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  style={{
+                    backgroundColor: "#fff",
+                    borderBottom: "1px solid #eee",
+                  }}
+                >
+                  {/* 🧍 Khách hàng */}
+                  <TableCell>
+                    <Typography variant="subtitle2">{o.user?.name}</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {o.user?.email}
+                    </Typography>
+                  </TableCell>
 
-                <TableCell>
-                  <Chip
-                    label={
-                      o.paymentMethod === "cod"
-                        ? "COD (Khi nhận)"
-                        : "Chuyển khoản"
-                    }
-                    color={o.paymentMethod === "cod" ? "default" : "info"}
-                    size="small"
-                  />
-                </TableCell>
+                  {/* 📦 Sản phẩm */}
+                  <TableCell>
+                    {o.products.map((p) => (
+                      <Box
+                        key={p.id}
+                        display="flex"
+                        alignItems="center"
+                        gap={1.5}
+                        mb={0.5}
+                        sx={{
+                          background: "#f9f9f9",
+                          borderRadius: 2,
+                          p: 1,
+                        }}
+                      >
+                        {p.image && (
+                          <Avatar
+                            src={p.image}
+                            alt={p.name}
+                            sx={{
+                              width: 32,
+                              height: 32,
+                              border: "1px solid #ddd",
+                            }}
+                          />
+                        )}
+                        <Box>
+                          <Typography variant="body2" fontWeight={600}>
+                            {p.name}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {p.weight || 2} kg × {p.quantity}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    ))}
+                  </TableCell>
 
-                <TableCell>
-                  <Chip
-                    label={
-                      {
-                        pending: "Chờ xác nhận",
-                        waiting_payment: "Chờ thanh toán",
-                        paid: "Đã thanh toán",
-                        shipped: "Đang giao",
-                        completed: "Hoàn tất",
-                      }[o.status] || o.status
-                    }
-                    color={statusColor[o.status] || "default"}
-                    size="small"
-                  />
-                </TableCell>
+                  {/* 💳 Thanh toán */}
+                  <TableCell>
+                    <Chip
+                      label={
+                        o.paymentMethod === "cod"
+                          ? "COD (Khi nhận)"
+                          : "Chuyển khoản"
+                      }
+                      color={o.paymentMethod === "cod" ? "default" : "info"}
+                      size="small"
+                    />
+                  </TableCell>
 
-                <TableCell sx={{ fontWeight: "bold", color: "#2e7d32" }}>
-                  {o.totalPrice.toLocaleString()} ₫
-                </TableCell>
+                  {/* 🚚 Trạng thái */}
+                  <TableCell>
+                    <Chip
+                      label={
+                        {
+                          pending: "Chờ xác nhận",
+                          waiting_payment: "Chờ thanh toán",
+                          paid: "Đã thanh toán",
+                          shipped: "Đang giao",
+                          completed: "Hoàn tất",
+                        }[o.status] || o.status
+                      }
+                      color={statusColor[o.status] || "default"}
+                      size="small"
+                    />
+                  </TableCell>
 
-                <TableCell>
-                  <Typography variant="body2">
-                    {new Date(o.createdAt).toLocaleDateString("vi-VN")}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {new Date(o.createdAt).toLocaleTimeString("vi-VN")}
-                  </Typography>
-                </TableCell>
-              </motion.tr>
-            ))}
+                  {/* ⚖️ Tổng khối lượng */}
+                  <TableCell>
+                    <Typography fontWeight="bold" color="text.primary">
+                      {totalWeight} kg
+                    </Typography>
+                  </TableCell>
+
+                  {/* 💰 Tổng tiền */}
+                  <TableCell sx={{ fontWeight: "bold", color: "#2e7d32" }}>
+                    {o.totalPrice.toLocaleString()} ₫
+                  </TableCell>
+
+                  {/* 🕓 Ngày đặt */}
+                  <TableCell>
+                    <Typography variant="body2">
+                      {new Date(o.createdAt).toLocaleDateString("vi-VN")}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {new Date(o.createdAt).toLocaleTimeString("vi-VN")}
+                    </Typography>
+                  </TableCell>
+                </motion.tr>
+              );
+            })}
           </TableBody>
         </Table>
       </Paper>

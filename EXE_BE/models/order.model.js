@@ -1,4 +1,3 @@
-// models/order.model.js
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
@@ -26,6 +25,7 @@ const orderSchema = new mongoose.Schema(
           required: true,
         },
         quantity: { type: Number, required: true },
+        weight: { type: Number, enum: [2, 5, 10], required: true }, // 👈 thêm dòng này
         price: { type: Number, required: true },
       },
     ],

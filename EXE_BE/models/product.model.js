@@ -7,6 +7,12 @@ const productSchema = new mongoose.Schema({
   image: String,
   category: String,
   stock: { type: Number, default: 0 },
+  // 3 đơn vị bán mặc định
+  weights: {
+    type: [Number],
+    default: [2, 5, 10],
+    immutable: true,
+  },
 });
 
 module.exports = mongoose.model("Product", productSchema);

@@ -1267,3 +1267,124 @@ a {
     transform: translateY(0);
   }
 }
+/* 🧩 Chọn khối lượng đẹp */
+.weight-container {
+  margin-top: 10px;
+}
+
+.weight-label {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 6px;
+  gap: 6px;
+}
+
+.weight-options {
+  display: flex;
+  gap: 10px;
+}
+
+.weight-btn {
+  background-color: #f3f4f6;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.weight-btn:hover {
+  background-color: #e8eaf0;
+  border-color: #007bff;
+}
+
+.weight-btn.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #0056d2;
+  transform: scale(1.05);
+}
+
+/* 📦 Cart tổng thể */
+.cart-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: #fff;
+  padding: 16px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.cart-item-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.cart-item-info {
+  flex: 1;
+}
+
+.subtotal strong {
+  color: #007bff;
+  font-weight: 700;
+}
+
+.cart-summary {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.checkout-btn {
+  background-color: #007bff;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.checkout-btn:hover {
+  background-color: #0056d2;
+}
+.checkout-products {
+  margin: 20px 0;
+  background: #fafafa;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.checkout-product-item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+
+.checkout-product-img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  margin-right: 15px;
+  border-radius: 8px;
+}
+
+.checkout-product-info h4 {
+  margin: 0;
+  font-size: 1.1em;
+}
+
+.checkout-product-info p {
+  margin: 2px 0;
+  color: #555;
+}

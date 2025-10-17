@@ -1,14 +1,35 @@
-// src/pages/Cart.jsx
 import { useCart } from "../context/CartContext";
+import { useState, useEffect } from "react";
+import { Scale } from "lucide-react";
+import "./../styles.css"; // nhớ đảm bảo có file styles.css
 
 export default function Cart({ onCheckout }) {
-  const { items, updateItemQuantity, removeItem, clear } = useCart();
+  const { items, removeItem, clear, updateItem } = useCart();
 
-  // Tính tổng tiền
-  const total = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+  const [weights, setWeights] = useState({});
+
+  useEffect(() => {
+    const initWeights = {};
+    items.forEach((item) => {
+      initWeights[item.id] = weights[item.id] || 2;
+    });
+    setWeights(initWeights);
+  }, [items]);
+
+  const handleWeightChange = (item, weight) => {
+    const newWeight = Number(weight);
+    setWeights({ ...weights, [item.id]: newWeight });
+    updateItem({
+      ...item,
+      weight: newWeight,
+      totalPrice: item.price * newWeight,
+    });
+  };
+
+  const total = items.reduce((sum, item) => {
+    const w = weights[item.id] || 2;
+    return sum + item.price * w;
+  }, 0);
 
   return (
     <div className="cart-page">
@@ -29,29 +50,40 @@ export default function Cart({ onCheckout }) {
                 <div className="cart-item-info">
                   <h4>{item.name}</h4>
                   <p className="price">
-                    Giá: {item.price.toLocaleString()} VND
+                    Giá mỗi kg: {item.price.toLocaleString()} VND
                   </p>
+
+                  {/* ⚖️ Giao diện chọn khối lượng đẹp hơn */}
+                  <div className="weight-container">
+                    <div className="weight-label">
+                      <Scale size={20} /> <span>Chọn khối lượng:</span>
+                    </div>
+
+                    <div className="weight-options">
+                      {[2, 5, 10].map((w) => (
+                        <button
+                          key={w}
+                          type="button"
+                          className={`weight-btn ${
+                            weights[item.id] === w ? "active" : ""
+                          }`}
+                          onClick={() => handleWeightChange(item, w)}
+                        >
+                          {w} kg
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   <div className="cart-item-controls">
-                    <button
-                      className="qty-btn"
-                      onClick={() =>
-                        updateItemQuantity(item, item.quantity - 1)
-                      }
-                      disabled={item.quantity <= 1}
-                    >
-                      -
-                    </button>
-                    <span className="qty">{item.quantity}</span>
-                    <button
-                      className="qty-btn"
-                      onClick={() =>
-                        updateItemQuantity(item, item.quantity + 1)
-                      }
-                    >
-                      +
-                    </button>
                     <span className="subtotal">
-                      = {(item.price * item.quantity).toLocaleString()} VND
+                      Thành tiền:{" "}
+                      <strong>
+                        {(
+                          item.price * (weights[item.id] || 2)
+                        ).toLocaleString()}{" "}
+                        VND
+                      </strong>
                     </span>
                     <button
                       className="remove-btn"
@@ -76,7 +108,7 @@ export default function Cart({ onCheckout }) {
               </button>
               <button
                 className="checkout-btn"
-                onClick={onCheckout} // 👉 chuyển sang checkout
+                onClick={() => onCheckout(weights)}
               >
                 💳 Thanh toán
               </button>

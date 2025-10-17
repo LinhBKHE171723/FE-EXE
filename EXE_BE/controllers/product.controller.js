@@ -6,9 +6,17 @@ exports.getAll = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-  const product = new Product(req.body);
-  await product.save();
-  res.json(product);
+  try {
+    const product = new Product({
+      ...req.body,
+      weights: [2, 5, 10], // đảm bảo luôn set mặc định
+    });
+    await product.save();
+    res.json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi khi tạo sản phẩm" });
+  }
 };
 
 exports.update = async (req, res) => {
