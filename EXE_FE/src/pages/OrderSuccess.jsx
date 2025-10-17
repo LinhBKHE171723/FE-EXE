@@ -11,8 +11,8 @@ export default function OrderSuccess() {
     <div className="success-page">
       <div className="success-card">
         <div className="success-icon">🎉</div>
-        <h2>Đặt hàng thành công!</h2>
-        <p>Cảm ơn bạn đã mua hàng. Đơn hàng của bạn sẽ sớm được giao.</p>
+        <h2>Đặt hàng thành công. Chờ xác nhận của chúng tôi!</h2>
+        <p>Cảm ơn bạn đã mua hàng</p>
         <button
           className="success-btn"
           onClick={() => (window.location.href = "/")}

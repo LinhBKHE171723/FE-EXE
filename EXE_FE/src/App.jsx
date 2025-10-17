@@ -14,11 +14,10 @@ import HomeBlogPreview from "./components/HomeBlogPreview";
 import HomePolicySnippet from "./components/HomePolicySnippet";
 import SubscribeForm from "./components/SubscribeForm";
 import Cart from "./pages/Cart";
-
-// 👉 thêm 3 màn mới
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
 import OrderQR from "./pages/OrderQR";
+import MyOrders from "./pages/MyOrders";
 
 export default function App() {
   const { currentSection, setCurrentSection, showAuth, setShowAuth } = useUi();
@@ -36,11 +35,10 @@ export default function App() {
           setOrderStatus(null); // reset trạng thái khi đổi tab
         }}
       />
-
+      {/* ✅ Hero chỉ hiện ở trang Home */}
       {currentSection === "home" && <Hero />}
-
       <main className="main-content">
-        {/* ✅ Ưu tiên hiển thị màn checkout / success / qr */}
+        {/* ✅ Ưu tiên hiển thị các màn liên quan đến đơn hàng */}
         {orderStatus === "success" && <OrderSuccess />}
         {orderStatus === "qr" && (
           <OrderQR onPaid={() => setOrderStatus("success")} />
@@ -48,6 +46,7 @@ export default function App() {
 
         {orderStatus === null && (
           <>
+            {/* ✅ Trang sản phẩm + phần giới thiệu ở Home */}
             {showProducts && (
               <>
                 <Products />
@@ -60,12 +59,18 @@ export default function App() {
                 )}
               </>
             )}
+
+            {/* ✅ Các trang khác */}
             {currentSection === "blog" && <Blog />}
             {currentSection === "policy" && <Policy />}
             {currentSection === "contact" && <Contact />}
+
+            {/* ✅ Giỏ hàng */}
             {currentSection === "cart" && (
               <Cart onCheckout={() => setCurrentSection("checkout")} />
             )}
+
+            {/* ✅ Thanh toán */}
             {currentSection === "checkout" && (
               <Checkout
                 onComplete={(payment) =>
@@ -73,13 +78,17 @@ export default function App() {
                 }
               />
             )}
+
+            {/* ✅ Đơn hàng của tôi */}
+            {currentSection === "orders" && <MyOrders />}
           </>
         )}
       </main>
-
+      {/* ✅ Footer + các thành phần dùng chung */}
       <Footer />
       <Notification />
       <ChatBubble />
+      {/* ✅ Modal đăng nhập/đăng ký */}
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
     </>
   );

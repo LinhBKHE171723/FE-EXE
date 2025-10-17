@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { request } from "../api/http";
 import { useUi } from "../context/UiContext";
+import { useAuth } from "../context/AuthContext"; // ✅ import thêm
 import { motion } from "framer-motion";
 
 export default function SubscribeForm() {
   const { notify } = useUi();
+  const { user } = useAuth(); // ✅ lấy user hiện tại
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -22,15 +24,28 @@ export default function SubscribeForm() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+
+    // ⚠️ Nếu chưa đăng nhập
+    if (!user?._id) {
+      notify("⚠️ Bạn cần đăng nhập để đăng ký giao gạo định kỳ!");
+      return;
+    }
+
     setLoading(true);
     try {
-      await request("/subscriptions", { method: "POST", data: form }).catch(
-        () => {}
-      );
-      const list = JSON.parse(localStorage.getItem("gaosach:subs") || "[]");
-      list.push({ ...form, id: Date.now() });
-      localStorage.setItem("gaosach:subs", JSON.stringify(list));
-      notify("Đã đăng ký giao gạo định kỳ!");
+      // ✅ Thêm user info vào payload gửi lên backend
+      const payload = {
+        ...form,
+        userId: user._id,
+        email: user.email, // gửi email người dùng
+      };
+
+      await request("/api/subscriptions", {
+        method: "POST",
+        data: payload,
+      });
+
+      notify("🎉 Đã đăng ký giao gạo định kỳ thành công!");
       setForm({
         name: "",
         phone: "",
@@ -42,7 +57,7 @@ export default function SubscribeForm() {
         note: "",
       });
     } catch (err) {
-      notify("Có lỗi khi gửi đăng ký: " + err.message);
+      notify("❌ Có lỗi khi gửi đăng ký: " + err.message);
     } finally {
       setLoading(false);
     }

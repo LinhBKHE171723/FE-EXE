@@ -116,7 +116,7 @@ export default function Footer() {
           color: "#666",
         }}
       >
-        © 2025 Supper Rice
+        © 2025 Supper Rice by Bùi Khánh Linh
       </div>
     </footer>
   );

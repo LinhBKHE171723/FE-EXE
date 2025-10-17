@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useUi } from "../context/UiContext";
-
+import { GoogleLogin } from "@react-oauth/google";
 export default function AuthModal({ onClose }) {
   const [mode, setMode] = useState("login"); // 'login' hoặc 'register'
   const { login, register, loginWithGoogle } = useAuth();
@@ -69,14 +69,23 @@ export default function AuthModal({ onClose }) {
               </button>
             </form>
 
-            <button
-              type="button"
-              className="auth-btn google-btn"
-              onClick={onGoogleLogin}
-              disabled={loading}
-            >
-              <i className="fab fa-google" /> Đăng nhập với Google
-            </button>
+            <GoogleLogin
+              onSuccess={async (credentialResponse) => {
+                try {
+                  const googleToken = credentialResponse.credential; // token từ Google
+                  await loginWithGoogle(googleToken);
+                  notify("Đăng nhập Google thành công!");
+                  close();
+                } catch (err) {
+                  notify(`Đăng nhập Google thất bại: ${err.message}`);
+                }
+              }}
+              onError={() => {
+                notify("Đăng nhập Google thất bại!");
+              }}
+              theme="outline"
+              shape="pill"
+            />
 
             <p className="auth-switch">
               Chưa có tài khoản?{" "}

@@ -1,6 +1,6 @@
 import { request, setToken } from "./http";
 export async function loginApi({ email, password }) {
-  const res = await request("/auth/login", {
+  const res = await request("/api/auth/login", {
     method: "POST",
     data: { email, password },
   });
@@ -8,7 +8,7 @@ export async function loginApi({ email, password }) {
   return res;
 }
 export async function registerApi({ name, email, phone, password }) {
-  const res = await request("/auth/register", {
+  const res = await request("/api/auth/register", {
     method: "POST",
     data: { name, email, phone, password },
   });
@@ -17,7 +17,7 @@ export async function registerApi({ name, email, phone, password }) {
 }
 // hàm đăng nhập với Google OAuth
 export async function googleLoginApi({ token }) {
-  const res = await request("/auth/google-login", {
+  const res = await request("/api/auth/google-login", {
     method: "POST",
     data: { token }, // token Google gửi lên từ frontend
   });

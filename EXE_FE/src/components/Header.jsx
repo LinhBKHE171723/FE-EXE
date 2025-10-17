@@ -7,11 +7,13 @@ export default function Header({ onNavigate }) {
   const { user, logout } = useAuth();
   const { items } = useCart();
   const { setCurrentSection, setShowAuth } = useUi();
-  const [open, setOpen] = useState(false);
 
-  // Điều hướng đến các trang khác
+  const [menuOpen, setMenuOpen] = useState(false); // menu chính
+  const [userOpen, setUserOpen] = useState(false); // menu user
+
+  // Điều hướng
   const go = (section) => {
-    setOpen(false);
+    setMenuOpen(false);
     setCurrentSection(section);
     if (section === "products") {
       document
@@ -20,12 +22,13 @@ export default function Header({ onNavigate }) {
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-    onNavigate(section); // Gọi hàm điều hướng từ App.jsx
+    onNavigate(section);
   };
 
-  // Hàm điều hướng khi bấm vào giỏ hàng
-  const goToCart = () => {
-    onNavigate("cart"); // Chuyển trang giỏ hàng khi bấm vào biểu tượng giỏ hàng
+  const goToCart = () => onNavigate("cart");
+  const goToOrders = () => {
+    setUserOpen(false);
+    onNavigate("orders"); // 👈 link đến trang đơn hàng
   };
 
   return (
@@ -43,7 +46,8 @@ export default function Header({ onNavigate }) {
           <span className="logo-text">Super Rice</span>
         </a>
 
-        <ul className={`nav-menu ${open ? "open" : ""}`}>
+        {/* menu chính */}
+        <ul className={`nav-menu ${menuOpen ? "open" : ""}`}>
           <li>
             <a
               href="#home"
@@ -102,14 +106,101 @@ export default function Header({ onNavigate }) {
         </ul>
 
         <div className="nav-actions">
+          {/* user */}
           {user ? (
-            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-              <span>
-                Xin chào, <strong>{user.name || user.email}</strong>
-              </span>
-              <button className="login-btn" onClick={logout}>
-                Đăng xuất
-              </button>
+            <div className="user-menu-container">
+              <div
+                className="user-info"
+                onClick={() => setUserOpen((v) => !v)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  cursor: "pointer",
+                  position: "relative",
+                }}
+              >
+                <i
+                  className="fas fa-user-circle"
+                  style={{ fontSize: "1.6rem", color: "#555" }}
+                />
+                <span className="user-name">
+                  Xin chào, {user.name || user.email}
+                </span>
+              </div>
+
+              {userOpen && (
+                <div
+                  className="user-dropdown"
+                  style={{
+                    position: "absolute",
+                    top: "100%",
+                    right: 0,
+                    background: "#fff",
+                    boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
+                    borderRadius: "8px",
+                    padding: "8px 0",
+                    zIndex: 10,
+                  }}
+                >
+                  <button
+                    onClick={goToOrders}
+                    style={{
+                      display: "block",
+                      width: "100%",
+                      textAlign: "left",
+                      padding: "8px 16px",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontSize: "0.95rem",
+                      color: "#333",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background = "#f5f5f5")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = "transparent")
+                    }
+                  >
+                    <i
+                      className="fas fa-box"
+                      style={{ marginRight: "6px", color: "#ff8008" }}
+                    />{" "}
+                    Đơn hàng của tôi
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      logout();
+                      setUserOpen(false);
+                    }}
+                    style={{
+                      display: "block",
+                      width: "100%",
+                      textAlign: "left",
+                      padding: "8px 16px",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontSize: "0.95rem",
+                      color: "#333",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background = "#f5f5f5")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = "transparent")
+                    }
+                  >
+                    <i
+                      className="fas fa-sign-out-alt"
+                      style={{ marginRight: "6px", color: "#d33" }}
+                    />{" "}
+                    Đăng xuất
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <button className="login-btn" onClick={() => setShowAuth(true)}>
@@ -117,20 +208,21 @@ export default function Header({ onNavigate }) {
             </button>
           )}
 
-          {/* Giỏ hàng - Điều hướng đến trang giỏ hàng */}
+          {/* giỏ hàng */}
           <button
             className="cart-icon"
             aria-label="Giỏ hàng"
-            onClick={goToCart} // Điều hướng đến giỏ hàng
+            onClick={goToCart}
           >
             <i className="fas fa-shopping-cart" />
             <span className="cart-count">{items.length}</span>
           </button>
 
+          {/* hamburger */}
           <button
             className="hamburger"
             aria-label="Mở menu"
-            onClick={() => setOpen((v) => !v)}
+            onClick={() => setMenuOpen((v) => !v)}
           >
             <i className="fas fa-bars" />
           </button>

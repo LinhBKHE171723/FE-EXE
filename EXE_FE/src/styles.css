@@ -1094,3 +1094,176 @@ a {
   font-weight: 700;
   font-size: 1.1rem;
 }
+
+.user-menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+.user-dropdown button {
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 10px 16px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.user-dropdown button:hover {
+  background: #f0f0f0;
+}
+/* Ẩn tên người dùng khi ở mobile */
+@media (max-width: 768px) {
+  .user-name {
+    display: none;
+  }
+}
+.user-info i {
+  font-size: 1.8rem;
+  color: #555;
+}
+
+@media (max-width: 768px) {
+  .user-info {
+    padding: 4px;
+  }
+  .user-info i {
+    font-size: 1.6rem;
+  }
+}
+
+/* === MY ORDERS PAGE === */
+.orders-page {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.orders-title {
+  font-size: 1.6rem;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.order-card {
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  background: #fafafa;
+  transition: 0.3s;
+}
+
+.order-card:hover {
+  transform: translateY(-2px);
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.order-id {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.order-status {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.status-success {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-other {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.order-info p {
+  margin: 4px 0;
+  color: #444;
+  font-size: 0.9rem;
+}
+
+.order-products {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+}
+
+.order-products ul {
+  margin: 6px 0 0 0;
+  padding-left: 20px;
+  list-style: none;
+}
+
+.order-products li {
+  color: #555;
+}
+
+.empty {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: #777;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #ccc;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 4px solid #ddd;
+  border-top-color: #ff8a00;
+  border-radius: 50%;
+  margin: 2rem auto;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

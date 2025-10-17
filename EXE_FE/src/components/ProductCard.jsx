@@ -17,6 +17,7 @@ export default function ProductCard({ product }) {
       notify(`Đã thêm ${product.name} vào giỏ hàng!`);
     }
   };
+  console.log("🧱 ProductCard:", product);
 
   return (
     <div
@@ -48,9 +49,9 @@ export default function ProductCard({ product }) {
           marginBottom: "0.75rem",
         }}
       >
-        {product.imageUrl ? (
+        {product.imageUrl || product.image ? (
           <img
-            src={product.imageUrl}
+            src={product.imageUrl || product.image}
             alt={product.name}
             style={{
               width: "100%",
@@ -67,6 +68,7 @@ export default function ProductCard({ product }) {
           "🌾"
         )}
       </div>
+
       <h3
         className="product-name"
         style={{

@@ -22,7 +22,7 @@ export default function Cart({ onCheckout }) {
             {items.map((item) => (
               <li key={item.id} className="cart-item">
                 <img
-                  src={item.imageUrl}
+                  src={item.image}
                   alt={item.name}
                   className="cart-item-img"
                 />

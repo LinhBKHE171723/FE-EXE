@@ -14,30 +14,31 @@ export function CartProvider({ children }) {
 
   const add = (product) =>
     setItems((prev) => {
-      // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
-      const existingProduct = prev.find((item) => item.id === product.id);
+      // ✅ Dùng _id để so sánh (chuẩn MongoDB)
+      const existingProduct = prev.find((item) => item._id === product._id);
+
       if (existingProduct) {
-        // Nếu sản phẩm đã có, tăng số lượng lên
+        // Nếu sản phẩm đã có → tăng số lượng
         return prev.map((item) =>
-          item.id === product.id
+          item._id === product._id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
-      // Nếu sản phẩm chưa có trong giỏ, thêm vào giỏ
+
+      // Nếu chưa có → thêm mới
       return [...prev, { ...product, quantity: 1 }];
     });
 
   const removeItem = (productToRemove) => {
-    setItems((prev) => prev.filter((item) => item.id !== productToRemove.id));
+    setItems((prev) => prev.filter((item) => item._id !== productToRemove._id));
   };
 
   const updateItemQuantity = (productToUpdate, newQuantity) => {
-    // Chỉ thay đổi số lượng nếu số lượng lớn hơn 0
     if (newQuantity > 0) {
       setItems((prev) =>
         prev.map((item) =>
-          item.id === productToUpdate.id
+          item._id === productToUpdate._id
             ? { ...item, quantity: newQuantity }
             : item
         )

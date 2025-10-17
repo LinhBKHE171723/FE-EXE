@@ -33,13 +33,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   // đăng ký
-  const register = async ({ name, email, phone, password }) => {
-    const { user: u, token } = await registerApi({
-      name,
-      email,
-      phone,
-      password,
-    });
+  const register = async (email, password) => {
+    const { user: u, token } = await registerApi({ email, password });
     if (token) setToken(token);
     setUser(u);
     setPoints((p) => p + 100);
