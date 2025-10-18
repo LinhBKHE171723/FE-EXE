@@ -5,4 +5,6 @@ const authApi = {
   register: (data) => axiosClient.post("/auth/register", data),
 };
 
+
+
 export default authApi;
