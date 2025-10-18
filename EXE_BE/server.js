@@ -8,9 +8,23 @@ connectDB();
 
 const app = express();
 
+// Allow CORS from configured origins
+const defaultOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  process.env.FRONTEND_ORIGIN,
+  process.env.ADMIN_ORIGIN,
+]
+  .filter(Boolean)
+  .map((o) => o.trim());
+
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:3000"],
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true); // allow curl/postman
+      if (defaultOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error("CORS not allowed: " + origin));
+    },
     credentials: true,
   })
 );
@@ -24,6 +38,7 @@ app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/ai", require("./routes/ai.routes"));
 app.use("/api/subscriptions", require("./routes/subscription.routes"));
 
-app.listen(process.env.PORT, () => {
-  console.log(`✅ Server running on http://localhost:${process.env.PORT}`);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`✅ Server running on http://0.0.0.0:${PORT}`);
 });
