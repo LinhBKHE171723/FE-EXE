@@ -8,6 +8,7 @@ RUN echo "$ADMIN_ENV_CONTENT" > .env
 COPY package*.json ./
 RUN npm ci
 COPY . .
+ENV PUBLIC_URL=/admin
 RUN npm run build
 
 # Serve with nginx
