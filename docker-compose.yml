@@ -28,6 +28,18 @@ services:
       - PORT=5000
     networks:
       - app-network
+    depends_on:
+      - mongo
+
+  # MongoDB database
+  mongo:
+    image: mongo:7.0
+    container_name: superrice-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
 
   # Nginx reverse proxy (serves FE/Admin and proxies /api and /ai to backend)
   nginx:
@@ -49,3 +61,6 @@ services:
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  mongo-data:
