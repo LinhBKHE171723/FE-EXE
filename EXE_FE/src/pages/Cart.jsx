@@ -1,14 +1,16 @@
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 import { useState, useEffect } from "react";
 import { Scale } from "lucide-react";
-import "./../styles.css"; // nhớ đảm bảo có file styles.css
+import { useUi } from "../context/UiContext";
+import "./../styles.css";
 
 export default function Cart({ onCheckout }) {
   const { items, removeItem, clear, updateItem } = useCart();
-
+  const { user } = useAuth();
+  const { notify } = useUi();
   const [weights, setWeights] = useState({});
 
-  // 🔧 Khởi tạo khối lượng riêng cho từng sản phẩm
   useEffect(() => {
     const initWeights = {};
     items.forEach((item) => {
@@ -17,7 +19,6 @@ export default function Cart({ onCheckout }) {
     setWeights(initWeights);
   }, [items]);
 
-  // 🧮 Xử lý khi người dùng chọn lại khối lượng
   const handleWeightChange = (item, weight) => {
     const newWeight = Number(weight);
     setWeights((prev) => ({ ...prev, [item._id]: newWeight }));
@@ -28,7 +29,14 @@ export default function Cart({ onCheckout }) {
     });
   };
 
-  // 💰 Tính tổng giá trị giỏ hàng
+  const handleCheckout = () => {
+    if (!user) {
+      notify("Vui lòng đăng nhập trước khi thanh toán!");
+      return;
+    }
+    onCheckout(weights);
+  };
+
   const total = items.reduce((sum, item) => {
     const w = weights[item._id] || 2;
     return sum + item.price * w;
@@ -50,14 +58,12 @@ export default function Cart({ onCheckout }) {
                   alt={item.name}
                   className="cart-item-img"
                 />
-
                 <div className="cart-item-info">
                   <h4>{item.name}</h4>
                   <p className="price">
                     Giá mỗi kg: {item.price.toLocaleString()} VND
                   </p>
 
-                  {/* ⚖️ Giao diện chọn khối lượng */}
                   <div className="weight-container">
                     <div className="weight-label">
                       <Scale size={20} /> <span>Chọn khối lượng:</span>
@@ -89,7 +95,6 @@ export default function Cart({ onCheckout }) {
                         VND
                       </strong>
                     </span>
-
                     <button
                       className="remove-btn"
                       onClick={() => removeItem(item)}
@@ -102,21 +107,16 @@ export default function Cart({ onCheckout }) {
             ))}
           </ul>
 
-          {/* Tổng kết giỏ hàng */}
           <div className="cart-summary">
             <h3>
               Tổng cộng phải trả:{" "}
               <span className="total-price">{total.toLocaleString()} VND</span>
             </h3>
-
             <div className="cart-summary-actions">
               <button className="clear-btn" onClick={clear}>
                 🗑️ Xóa toàn bộ
               </button>
-              <button
-                className="checkout-btn"
-                onClick={() => onCheckout(weights)}
-              >
+              <button className="checkout-btn" onClick={handleCheckout}>
                 💳 Thanh toán
               </button>
             </div>
