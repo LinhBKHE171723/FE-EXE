@@ -55,13 +55,13 @@ export default function Policy() {
             title: "5) Bảo mật thông tin cá nhân",
             items: [
               "Chỉ sử dụng dữ liệu để phục vụ đơn hàng và chăm sóc khách hàng.",
-              "Bạn có quyền yêu cầu sửa/xoá dữ liệu—liên hệ: info@tinhoadatttroi.vn.",
+              "Bạn có quyền yêu cầu sửa/xoá dữ liệu—liên hệ: superrice89@gmail.com",
             ],
           },
           {
             title: "6) Khiếu nại & hỗ trợ",
             items: [
-              "Hotline: 0123 456 789 (08:00–21:00). Email: support@tinhoadatttroi.vn.",
+              "Hotline: 0378757198 (08:00–21:00). Email: superrice89@gmail.com",
               "Thời gian phản hồi trong 24h làm việc.",
             ],
           },

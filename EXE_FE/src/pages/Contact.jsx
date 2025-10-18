@@ -12,9 +12,9 @@ export default function Contact() {
     {
       id: "mail",
       icon: <i className="fas fa-envelope" />,
-      text: "supperrice@gmail.com",
+      text: "supperrice89@gmail.com",
       color: "#f9a825",
-      link: "mailto:supperrice@gmail.com",
+      link: "mailto:supperrice89@gmail.com",
     },
     {
       id: "zalo",

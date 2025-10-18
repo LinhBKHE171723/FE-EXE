@@ -60,14 +60,14 @@ export default function Footer() {
               className="fas fa-phone"
               style={{ marginRight: "8px", color: "#fbc02d" }}
             />
-            0123 456 789
+            0378757198
           </p>
           <p>
             <i
               className="fas fa-envelope"
               style={{ marginRight: "8px", color: "#fbc02d" }}
             />
-            supperrice@gmail.com
+            supperrice89@gmail.com
           </p>
         </div>
 
