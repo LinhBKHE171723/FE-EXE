@@ -1,6 +1,7 @@
 {
-  "name": "admin",
+  "name": "superrice-admin",
   "version": "0.1.0",
+  "homepage": "/admin",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.14.0",
