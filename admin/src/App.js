@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   return (
-    <Router>
+    <Router basename="/admin">
       <Routes>
         <Route path="/" element={<Login />} />
         <Route
