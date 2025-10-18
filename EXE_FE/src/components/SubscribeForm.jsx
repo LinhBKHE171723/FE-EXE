@@ -1,23 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { request } from "../api/http";
 import { useUi } from "../context/UiContext";
-import { useAuth } from "../context/AuthContext"; // ✅ import thêm
-import { motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
+import { getProducts } from "../api/products"; // ✅ import hàm lấy sản phẩm
 
 export default function SubscribeForm() {
   const { notify } = useUi();
-  const { user } = useAuth(); // ✅ lấy user hiện tại
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState([]);
+
   const [form, setForm] = useState({
     name: "",
     phone: "",
     address: "",
-    rice: "Gạo ST25 Cao Cấp",
+    rice: "",
     weight: "5kg",
     frequency: "weekly",
     startDate: "",
     note: "",
   });
+
+  // 🔄 Lấy danh sách sản phẩm từ DB khi component mount
+  useEffect(() => {
+    getProducts()
+      .then((data) => {
+        const list = Array.isArray(data) ? data : data?.items || [];
+        setProducts(list);
+        if (list.length > 0) {
+          setForm((f) => ({ ...f, rice: list[0].name }));
+        }
+      })
+      .catch((err) => {
+        notify("❌ Không thể tải danh sách gạo: " + err.message);
+      });
+  }, []);
 
   const onChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -25,7 +43,6 @@ export default function SubscribeForm() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    // ⚠️ Nếu chưa đăng nhập
     if (!user?._id) {
       notify("⚠️ Bạn cần đăng nhập để đăng ký giao gạo định kỳ!");
       return;
@@ -33,11 +50,10 @@ export default function SubscribeForm() {
 
     setLoading(true);
     try {
-      // ✅ Thêm user info vào payload gửi lên backend
       const payload = {
         ...form,
         userId: user._id,
-        email: user.email, // gửi email người dùng
+        email: user.email,
       };
 
       await request("/api/subscriptions", {
@@ -50,7 +66,7 @@ export default function SubscribeForm() {
         name: "",
         phone: "",
         address: "",
-        rice: "Gạo ST25 Cao Cấp",
+        rice: products[0]?.name || "",
         weight: "5kg",
         frequency: "weekly",
         startDate: "",
@@ -115,17 +131,27 @@ export default function SubscribeForm() {
             className="form-input"
             style={{ ...inputStyle, gridColumn: "1/-1" }}
           />
+
+          {/* 🧱 Danh sách gạo chỉ hiển thị tên */}
           <select
             name="rice"
             value={form.rice}
             onChange={onChange}
             className="form-input"
             style={inputStyle}
+            required
           >
-            <option>Gạo ST25 Cao Cấp</option>
-            <option>Gạo Jasmine Thơm</option>
-            <option>Gạo Tám Xoan</option>
+            {products.length === 0 ? (
+              <option disabled>Đang tải danh sách gạo...</option>
+            ) : (
+              products.map((p) => (
+                <option key={p._id} value={p.name}>
+                  {p.name}
+                </option>
+              ))
+            )}
           </select>
+
           <select
             name="weight"
             value={form.weight}
@@ -138,6 +164,7 @@ export default function SubscribeForm() {
             <option>10kg</option>
             <option>25kg</option>
           </select>
+
           <select
             name="frequency"
             value={form.frequency}
@@ -149,6 +176,7 @@ export default function SubscribeForm() {
             <option value="biweekly">2 tuần/lần</option>
             <option value="monthly">Hàng tháng</option>
           </select>
+
           <input
             type="date"
             name="startDate"
@@ -158,6 +186,7 @@ export default function SubscribeForm() {
             className="form-input"
             style={inputStyle}
           />
+
           <textarea
             name="note"
             value={form.note}
