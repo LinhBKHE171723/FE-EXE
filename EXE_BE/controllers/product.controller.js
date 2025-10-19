@@ -7,10 +7,14 @@ exports.getAll = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
+    const body = req.body;
+
+    // ✅ Nếu không gửi weights → tự động gán mặc định
     const product = new Product({
-      ...req.body,
-      weights: [2, 5, 10], // đảm bảo luôn set mặc định
+      ...body,
+      weights: body.weights?.length ? body.weights : [2, 5, 10],
     });
+
     await product.save();
     res.json(product);
   } catch (error) {
@@ -20,10 +24,21 @@ exports.create = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  res.json(product);
+  try {
+    const body = req.body;
+
+    // ✅ Nếu gửi weights mới → chấp nhận cập nhật
+    const product = await Product.findByIdAndUpdate(
+      req.params.id,
+      { ...body },
+      { new: true, runValidators: true }
+    );
+
+    res.json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi khi cập nhật sản phẩm" });
+  }
 };
 
 exports.delete = async (req, res) => {
