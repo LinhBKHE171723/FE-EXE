@@ -12,16 +12,28 @@ export default function Cart({ onCheckout }) {
   const [weights, setWeights] = useState({});
 
   useEffect(() => {
-    const initWeights = {};
-    items.forEach((item) => {
-      initWeights[item._id] = weights[item._id] || item.weight || 2;
+    setWeights((prev) => {
+      const newWeights = { ...prev };
+      items.forEach((item) => {
+        if (newWeights[item._id] === undefined) {
+          newWeights[item._id] = item.weight || 2;
+        }
+      });
+      return newWeights;
     });
-    setWeights(initWeights);
   }, [items]);
 
   const handleWeightChange = (item, weight) => {
     const newWeight = Number(weight);
+
+    // ✅ Kiểm tra giá trị hợp lệ (1 - 100)
+    if (isNaN(newWeight) || newWeight < 1 || newWeight > 100) {
+      notify("Vui lòng nhập khối lượng từ 1 đến 100 kg!");
+      return;
+    }
+
     setWeights((prev) => ({ ...prev, [item._id]: newWeight }));
+
     updateItem({
       ...item,
       weight: newWeight,
@@ -83,16 +95,22 @@ export default function Cart({ onCheckout }) {
                         </button>
                       ))}
 
-                      {/* ✅ Thêm ô nhập khối lượng tùy chọn */}
+                      {/* ✅ Ô nhập khối lượng tùy chọn */}
                       <input
                         type="number"
                         min="1"
+                        max="100"
                         placeholder="Tùy chọn"
                         value={weights[item._id] || ""}
                         onChange={(e) =>
                           handleWeightChange(item, e.target.value)
                         }
-                        className="weight-input"
+                        className={`weight-input ${
+                          ![2, 5, 10].includes(weights[item._id]) &&
+                          weights[item._id]
+                            ? "active"
+                            : ""
+                        }`}
                       />
                       <span>kg</span>
                     </div>
