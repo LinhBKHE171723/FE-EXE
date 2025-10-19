@@ -82,6 +82,19 @@ export default function Cart({ onCheckout }) {
                           {w} kg
                         </button>
                       ))}
+
+                      {/* ✅ Thêm ô nhập khối lượng tùy chọn */}
+                      <input
+                        type="number"
+                        min="1"
+                        placeholder="Tùy chọn"
+                        value={weights[item._id] || ""}
+                        onChange={(e) =>
+                          handleWeightChange(item, e.target.value)
+                        }
+                        className="weight-input"
+                      />
+                      <span>kg</span>
                     </div>
                   </div>
 

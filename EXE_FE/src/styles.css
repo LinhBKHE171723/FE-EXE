@@ -1388,3 +1388,22 @@ a {
   margin: 2px 0;
   color: #555;
 }
+
+.weight-input {
+  width: 70px;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.4;
+  vertical-align: middle; /* ✅ Giúp input cân với nút */
+}
+
+.weight-options span {
+  margin-left: 4px;
+  font-size: 14px;
+  vertical-align: middle; /* ✅ Căn “kg” thẳng hàng với input */
+  position: relative;
+  top: 1px; /* nếu vẫn lệch có thể tăng hoặc giảm giá trị này */
+}
