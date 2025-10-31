@@ -6,4 +6,6 @@ router.post("/", orderCtrl.createOrder);
 router.get("/user/:userId", orderCtrl.getUserOrders);
 router.get("/", orderCtrl.getAllOrders);
 
+router.patch("/:id/status", orderCtrl.updateStatus);
+router.patch("/:id", orderCtrl.updateOrder);
 module.exports = router;

@@ -7,6 +7,10 @@ const orderApi = {
     const total = res.data.reduce((sum, order) => sum + order.totalPrice, 0);
     return total;
   },
+  updateStatus: (orderId, status) =>
+    axiosClient.patch(`/orders/${orderId}/status`, { status }),
+  update: (orderId, payload) =>
+    axiosClient.patch(`/orders/${orderId}`, payload),
 };
 
 export default orderApi;
