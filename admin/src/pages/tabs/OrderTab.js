@@ -195,7 +195,6 @@ const OrderTab = () => {
       setOrders((list) =>
         list.map((o) => (o._id === editData._id ? { ...o, ...payload } : o))
       );
-      console.log("🚀 Payload cập nhật đơn:", payload);
 
       await orderApi.update(editData._id, payload);
 
@@ -277,7 +276,7 @@ const OrderTab = () => {
           </Box>
         </Stack>
 
-        <TableContainer sx={{ mt: 1, maxHeight: 560, borderRadius: 2 }}>
+        <TableContainer sx={{ mt: 1, borderRadius: 2, overflow: "hidden" }}>
           <Table stickyHeader size="small">
             <TableHead>
               <TableRow sx={{ "& th": { fontWeight: 700 } }}>
