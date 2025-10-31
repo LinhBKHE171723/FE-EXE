@@ -197,7 +197,7 @@ const OrderTab = () => {
       );
 
       await orderApi.update(editData._id, payload);
-      console.log("Cập nhật đơn hàng thành công:", editData._id);
+
       setSnack({
         open: true,
         type: "success",
