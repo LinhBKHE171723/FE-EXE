@@ -195,6 +195,7 @@ const OrderTab = () => {
       setOrders((list) =>
         list.map((o) => (o._id === editData._id ? { ...o, ...payload } : o))
       );
+      console.log("🚀 Payload cập nhật đơn:", payload);
 
       await orderApi.update(editData._id, payload);
 
