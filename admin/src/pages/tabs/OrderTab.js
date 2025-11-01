@@ -227,6 +227,25 @@ const OrderTab = () => {
       </Box>
     );
   }
+  const handleDelete = async (orderId) => {
+    if (!window.confirm("Bạn có chắc muốn xóa đơn hàng này không?")) return;
+
+    try {
+      await orderApi.delete(orderId);
+      setOrders((list) => list.filter((o) => o._id !== orderId));
+      setSnack({
+        open: true,
+        type: "success",
+        msg: "Đã xóa đơn hàng thành công.",
+      });
+    } catch (e) {
+      setSnack({
+        open: true,
+        type: "error",
+        msg: e?.response?.data?.message || "Xóa đơn hàng thất bại.",
+      });
+    }
+  };
 
   return (
     <motion.div
@@ -252,7 +271,7 @@ const OrderTab = () => {
           sx={{ mb: 1.5 }}
         >
           <Typography variant="h5" fontWeight="bold">
-            📦 Danh sách đơn hàng
+            📦 Danh sách đơn hàng, (Số lượng: {orders.length})
           </Typography>
 
           <Box
@@ -526,6 +545,13 @@ const OrderTab = () => {
                             disabled={!canEdit(o.status)}
                           >
                             Chỉnh sửa
+                          </Button>
+                          <Button
+                            startIcon={<CancelIcon />}
+                            color="error"
+                            onClick={() => handleDelete(o._id)}
+                          >
+                            Xóa
                           </Button>
                         </ButtonGroup>
 

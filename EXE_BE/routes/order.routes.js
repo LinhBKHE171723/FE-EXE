@@ -8,4 +8,6 @@ router.get("/", orderCtrl.getAllOrders);
 
 router.patch("/:id/status", orderCtrl.updateStatus);
 router.patch("/:id", orderCtrl.updateOrder);
+router.delete("/:id", orderCtrl.deleteOrder);
+
 module.exports = router;

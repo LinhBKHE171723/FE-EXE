@@ -11,6 +11,7 @@ const orderApi = {
     axiosClient.patch(`/orders/${orderId}/status`, { status }),
   update: (orderId, payload) =>
     axiosClient.patch(`/orders/${orderId}`, payload),
+  delete: (orderId) => axiosClient.delete(`/orders/${orderId}`),
 };
 
 export default orderApi;
