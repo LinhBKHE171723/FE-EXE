@@ -240,7 +240,7 @@ exports.deleteOrder = async (req, res) => {
     const { id } = req.params;
     const order = await Order.findByIdAndDelete(id);
     if (!order) {
-      return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
+      return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
     }
     res.json({ message: "Đã xóa đơn hàng thành công." });
   } catch (err) {
